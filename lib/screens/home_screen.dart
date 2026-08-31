@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // HEADER ICON BUTTON
   Widget _circleIconButton(IconData icon, VoidCallback onTap, {double size = 20}) {
     return GestureDetector(
       onTap: onTap,
@@ -51,9 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // CART ICON
   Widget _buildCartIcon() {
     return GestureDetector(
       onTap: () async {
+        // Awaits returning from details to refresh the cart badge.
         await Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(cart: cart)));
         setState(() {});
       },
@@ -86,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // FAVORITE TOGGLE
   void _toggleFavorite(String productName) {
     setState(() {
       if (_favoriteNames.contains(productName)) {
@@ -96,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // LOGO
   Widget _buildLogo({double titleSize = 20}) {
     return Row(
       children: [
@@ -110,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // PRODUCT CARD
   Widget _buildProductCard(Product product, bool isFavorite) {
     return Container(
       decoration: BoxDecoration(
@@ -122,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Stack(
             children: [
-              // UPDATED: Using Image.asset instead of Icon
               Container(
                 height: 120.0,
                 width: double.infinity,
@@ -216,71 +221,90 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // HOME PAGE
   Widget _buildHomePage() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: AppTheme.screenPadding, vertical: 15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return CustomScrollView(
+      slivers: [
+        // STICKY HEADER
+        // Keeps the header pinned at the top while scrolling.
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: AppTheme.bg,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          titleSpacing: AppTheme.screenPadding,
+          toolbarHeight: 60,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildLogo(),
+              Row(
+                children: [
+                  _circleIconButton(Icons.search, () {}),
+                  const SizedBox(width: 10),
+                  _buildCartIcon(),
+                ],
+              ),
+            ],
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppTheme.screenPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildLogo(),
-                Row(
-                  children: [
-                    _circleIconButton(Icons.search, () {}),
-                    const SizedBox(width: 10),
-                    _buildCartIcon(),
-                  ],
+                const SizedBox(height: 20),
+                _buildBanner(),
+                const SizedBox(height: 20),
+                _buildCategories(),
+                const SizedBox(height: 20),
+                // RESPONSIVE GRID
+                // Calculates the width for 2 columns based on screen size.
+                LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    double cardWidth = (constraints.maxWidth - 15) / 2;
+                    return Wrap(
+                      alignment: WrapAlignment.start,
+                      spacing: 15,
+                      runSpacing: 15,
+                      children: products.map((product) {
+                        bool isFavorite = _favoriteNames.contains(product.name);
+                        return SizedBox(
+                          width: cardWidth,
+                          child: GestureDetector(
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetailsScreen(
+                                    product: product,
+                                    cart: cart,
+                                    favoriteNames: _favoriteNames,
+                                    onToggleFavorites: () => setState(() {}),
+                                  ),
+                                ),
+                              );
+                              setState(() {});
+                            },
+                            onDoubleTap: () => _toggleFavorite(product.name),
+                            child: _buildProductCard(product, isFavorite),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
                 ),
+                const SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 20),
-            _buildBanner(),
-            const SizedBox(height: 20),
-            _buildCategories(),
-            const SizedBox(height: 20),
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                double cardWidth = (constraints.maxWidth - 15) / 2;
-                return Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 15,
-                  runSpacing: 15,
-                  children: products.map((product) {
-                    bool isFavorite = _favoriteNames.contains(product.name);
-                    return SizedBox(
-                      width: cardWidth,
-                      child: GestureDetector(
-                        onTap: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailsScreen(
-                                product: product,
-                                cart: cart,
-                                favoriteNames: _favoriteNames,
-                                onToggleFavorites: () => setState(() {}),
-                              ),
-                            ),
-                          );
-                          setState(() {});
-                        },
-                        onDoubleTap: () => _toggleFavorite(product.name),
-                        child: _buildProductCard(product, isFavorite),
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
+  // BANNER
   Widget _buildBanner() {
     return Container(
       width: double.infinity,
@@ -303,6 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // CATEGORY PILLS
   Widget _buildCategories() {
     return Wrap(
       spacing: 10,
@@ -317,6 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // CATEGORY CHIP
   Widget _buildCategoryChip(String title, {bool isSelected = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
@@ -332,6 +358,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // FAVORITES PAGE
   Widget _buildFavoritesPage() {
     List<Product> favorites = products.where((p) => _favoriteNames.contains(p.name)).toList();
     return SafeArea(
@@ -363,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: AppTheme.screenPadding),
             child: SizedBox(width: double.infinity, child: _buildCategories()),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Expanded(
             child: favorites.isEmpty
                 ? Center(
@@ -377,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   )
                 : SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: AppTheme.screenPadding),
+                    padding: const EdgeInsets.symmetric(horizontal: AppTheme.screenPadding, vertical: AppTheme.screenPadding),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: LayoutBuilder(
@@ -421,6 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // BOTTOM NAV
   Widget _buildCustomBottomNav() {
     return Container(
       decoration: BoxDecoration(
@@ -447,6 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // NAV ITEM
   Widget _buildNavItem(IconData icon, String label, int index) {
     bool isSelected = _selectedIndex == index;
     return GestureDetector(

@@ -26,6 +26,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String _selectedSize = '';
   int _quantity = 1;
 
+  // INITIAL STATE
+  // Picks the first size for drinks, or "Regular" for food.
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     _quantity = 1; 
   }
 
+  // PRICE LOGIC
+  // Adds a peso amount for Medium and Large sizes.
   double get _currentPrice {
     if (widget.product.sizes.isNotEmpty) {
       switch (_selectedSize) {
@@ -44,6 +48,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return widget.product.basePrice;
   }
 
+  // APPBAR
   @override
   Widget build(BuildContext context) {
     bool isFavorite = widget.favoriteNames.contains(widget.product.name);
@@ -68,6 +73,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         leadingWidth: 60,
         title: const Text('Menu Details', style: AppTheme.heading),
         actions: [
+          // HEART AND CART BUTTONS
+          // Heart reads from the shared favorites Set, updates it, and triggers Home to rebuild.
           GestureDetector(
             onTap: () {
               setState(() {
@@ -111,12 +118,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           const SizedBox(width: 20),
         ],
       ),
+
+      // BODY
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppTheme.screenPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // UPDATED: Using Image.asset instead of Icon
+            // PRODUCT IMAGE
             Container(
               height: 250,
               width: double.infinity,
@@ -136,6 +145,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             const SizedBox(height: 25),
+            
+            // TITLE AND PRICE
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -144,6 +155,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ],
             ),
             const SizedBox(height: 8),
+
+            // RATING
             Row(
               children: [
                 for (int i = 0; i < 4; i++) const Icon(Icons.star, color: AppTheme.favoriteRed, size: 18),
@@ -153,11 +166,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ],
             ),
             const SizedBox(height: 20),
+
+            // DESCRIPTION
             Text(
               widget.product.longDesc,
               style: AppTheme.body.copyWith(color: AppTheme.grayText, fontSize: 15, height: 1.6),
             ),
             const SizedBox(height: 25),
+
+            // SIZE SELECTION
+            // Drinks show three sizes with adjusted prices. Food shows one "Regular" box.
             const Text('Select Size', style: AppTheme.heading2),
             const SizedBox(height: 12),
             if (widget.product.sizes.isNotEmpty)
@@ -205,6 +223,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 child: const Text('Regular', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             const SizedBox(height: 30),
+
+            // QUANTITY
             const Text('QUANTITY', style: AppTheme.label),
             const SizedBox(height: 10),
             Container(
@@ -252,6 +272,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
       ),
+
+      // ADD TO CART BUTTON
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppTheme.white,
@@ -280,6 +302,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   price: _currentPrice,
                   quantity: _quantity,
                 ));
+                // Shows feedback without leaving the page.
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Added to Cart')),
                 );

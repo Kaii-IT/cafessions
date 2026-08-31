@@ -1,10 +1,11 @@
+// PART: PRODUCT MODEL
 class Product {
   final String name;
   final String desc;
   final String longDesc;
   final double basePrice;
   final String type;
-  final String imagePath; // Updated to String for Image.asset
+  final String imagePath;
   final List<String> sizes;
 
   Product({
@@ -18,6 +19,7 @@ class Product {
   });
 }
 
+// Holds the specific data for an item once it's inside the cart.
 class CartItem {
   final Product product;
   String size;

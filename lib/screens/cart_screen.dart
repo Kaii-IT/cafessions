@@ -14,6 +14,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  // APPBAR
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +37,35 @@ class _CartScreenState extends State<CartScreen> {
         leadingWidth: 60,
         title: const Text('My Cart', style: AppTheme.heading),
         actions: [
+          // Clear cart button. Long press shows a confirmation dialog before deleting all items.
           GestureDetector(
             onLongPress: () {
-              setState(() {
-                widget.cart.clear();
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Cart cleared')),
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Clear Cart?"),
+                    content: const Text("Are you sure you want to remove all items from your cart?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("Cancel", style: TextStyle(color: AppTheme.grayText)),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            widget.cart.clear();
+                          });
+                          Navigator.of(context).pop();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Cart cleared')),
+                          );
+                        },
+                        child: const Text("Yes, clear", style: TextStyle(color: AppTheme.favoriteRed)),
+                      ),
+                    ],
+                  );
+                },
               );
             },
             child: Container(
@@ -58,6 +81,8 @@ class _CartScreenState extends State<CartScreen> {
           const SizedBox(width: 20),
         ],
       ),
+
+      // BODY
       body: widget.cart.items.isEmpty
           ? Center(
               child: Column(
@@ -74,6 +99,7 @@ class _CartScreenState extends State<CartScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Item count header
                   Row(
                     children: [
                       Text('Your Items', style: AppTheme.heading2),
@@ -95,6 +121,8 @@ class _CartScreenState extends State<CartScreen> {
                   ...widget.cart.items.map((item) => _buildCartItem(item)),
                   
                   const SizedBox(height: 30),
+                  
+                  // Payment summary box
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -121,6 +149,8 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
             ),
+
+      // BOTTOM BUTTON
       bottomNavigationBar: widget.cart.items.isEmpty
           ? null
           : Container(
@@ -165,6 +195,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
+  // CART ITEM
   Widget _buildCartItem(CartItem item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
@@ -176,6 +207,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       child: Stack(
         children: [
+          // Delete single item
           Positioned(
             top: 0,
             right: 0,
@@ -195,7 +227,7 @@ class _CartScreenState extends State<CartScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // UPDATED: Using Image.asset instead of Icon
+                // Item image
                 Container(
                   width: 60,
                   height: 60,
@@ -223,6 +255,7 @@ class _CartScreenState extends State<CartScreen> {
                       const SizedBox(height: 5),
                       Text('\u20b1${item.price.toInt()}', style: AppTheme.price),
                       const SizedBox(height: 10),
+                      // Quantity controls. Updates the shared cart model and rebuilds.
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
@@ -274,6 +307,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
+  // SUMMARY ROW
   Widget _buildSummaryRow(String label, String amount, {bool isBold = false, bool isGreen = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

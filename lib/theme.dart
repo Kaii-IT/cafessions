@@ -1,29 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// ============================================================
-/// CAFESSIONS - CENTRALIZED THEME
-/// ============================================================
-/// Everything visual lives here: colors, fonts, spacing, radii,
-/// and reusable text styles. Screens should NEVER hardcode a
-/// Color(0x...) or a raw TextStyle — pull from AppTheme instead.
-///
-/// TO CHANGE THE FONT LATER:
-/// Just edit `fontFamily` below (and fontFamilyHeading if you want
-/// a different display font for titles). Every TextStyle in this
-/// file, and therefore every screen, updates automatically.
-/// ============================================================
 class AppTheme {
   AppTheme._();
 
-  // ----------------------------------------------------------
-  // FONT — change these two lines to re-skin the whole app
-  // ----------------------------------------------------------
+  // FONTS
   static const String fontFamily = 'Manrope';
   static const String fontFamilyHeading = 'Outfit'; // set a different font for headings if desired
 
-  // ----------------------------------------------------------
-  // BRAND COLORS
-  // ----------------------------------------------------------
+  // COLORS
   static const Color bg = Color(0xFFF7F2F2);
   static const Color primary = Color(0xFFF4C2C2); // blush pink
   static const Color primaryDark = Color(0xFFE8A8A8);
@@ -32,12 +16,7 @@ class AppTheme {
   static const Color buttonGreenDark = Color(0xFF8FBF8A);
   static const Color favoriteRed = Color(0xFFE57373);
 
-  // ----------------------------------------------------------
   // NEUTRALS
-  // Figma uses warm espresso-brown tones here, NOT neutral black/gray —
-  // pixel-sampled from the mockup: dark text/icons sit around #4E3E38,
-  // muted text/icons around #8A7670. Keep these warm, not neutral.
-  // ----------------------------------------------------------
   static const Color darkText = Color(0xFF4E3E38);
   static const Color bodyText = Color(0xFF6B5952);
   static const Color grayText = Color(0xFF8A7670);
@@ -48,17 +27,13 @@ class AppTheme {
   static const Color borderGray = Color(0xFFE0E0E0);
   static const Color dividerGray = Color(0xFFEFEFEF);
 
-  // ----------------------------------------------------------
   // STATE / FEEDBACK COLORS
-  // ----------------------------------------------------------
   static const Color successGreen = Color(0xFF4CAF50);
   static const Color errorRed = Color(0xFFF44336);
   static const Color starGold = Color(0xFFFFB74D);
   static const Color badgeCoral = Color(0xFFE0948F); // cart/notification badge — sampled from Figma, distinct from primary
 
-  // ----------------------------------------------------------
   // SHADOWS
-  // ----------------------------------------------------------
   static List<BoxShadow> get cardShadow => [
         BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 5)),
       ];
@@ -71,18 +46,14 @@ class AppTheme {
         BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, -4)),
       ];
 
-  // ----------------------------------------------------------
-  // RADII / SPACING — reuse instead of magic numbers
-  // ----------------------------------------------------------
+  // SPACING
   static const double radiusSm = 10;
   static const double radiusMd = 15;
   static const double radiusLg = 20;
   static const double radiusPill = 30;
   static const double screenPadding = 20;
 
-  // ----------------------------------------------------------
-  // TEXT STYLES — build once here, reuse everywhere
-  // ----------------------------------------------------------
+  // TEXT STYLES
   static const TextStyle heading = TextStyle(
     fontFamily: fontFamilyHeading,
     fontSize: 22,
@@ -152,9 +123,7 @@ class AppTheme {
     color: white,
   );
 
-  // ----------------------------------------------------------
   // FULL APP THEME
-  // ----------------------------------------------------------
   static ThemeData get lightTheme {
     return ThemeData(
       scaffoldBackgroundColor: bg,

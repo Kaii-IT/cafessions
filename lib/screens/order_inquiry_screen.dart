@@ -20,7 +20,8 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
   final _addressController = TextEditingController();
   final _notesController = TextEditingController();
 
-  // Helper to create the Label OUTSIDE the box
+  // FIELD LABEL
+  // Text is placed outside the box to match the Figma design.
   Widget _buildFieldLabel(String label, {bool isRequired = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -45,7 +46,8 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
     );
   }
 
-  // Base input decoration (NO LABEL, only hint, borders, and icons)
+  // INPUT DECORATION
+  // Changes border color and shows a checkmark when input is valid.
   InputDecoration _baseDecoration({
     String? hintText,
     bool isValid = false,
@@ -60,7 +62,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
         fontSize: 14,
         color: AppTheme.mutedText,
       ),
-      // Border colors (Exact colors from Figma)
+
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusSm),
         borderSide: BorderSide(
@@ -86,8 +88,9 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
     );
   }
 
+  // VALIDATION AND SUBMIT
+  // Shows a success modal only when all fields are valid. Clears cart on OK.
   void _submitForm() {
-    // This triggers ALL validators, showing error labels directly below the fields
     if (_formKey.currentState!.validate()) {
       showDialog(
         context: context,
@@ -125,6 +128,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
     }
   }
 
+  // APPBAR
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +151,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
         leadingWidth: 60,
         title: const Text('Order Inquiry', style: AppTheme.heading),
         actions: [
-          // Home icon inside white circle
+          // Goes back to the home page regardless of screen stack.
           GestureDetector(
             onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
             child: Container(
@@ -163,6 +167,8 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
           const SizedBox(width: 20),
         ],
       ),
+
+      // FORM BODY
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppTheme.screenPadding),
         child: Form(
@@ -170,7 +176,6 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
               const Text('Complete Inquiry Details', style: AppTheme.heading2),
               const SizedBox(height: 6),
               Text(
@@ -179,7 +184,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
               ),
               const SizedBox(height: 30),
 
-              // 1. Full Name
+              // FULL NAME
               _buildFieldLabel('Full Name', isRequired: true),
               TextFormField(
                 controller: _fullNameController,
@@ -194,7 +199,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 2. Mobile Number
+              // MOBILE NUMBER
               _buildFieldLabel('Mobile Number', isRequired: true),
               TextFormField(
                 controller: _mobileController,
@@ -212,7 +217,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 3. Email
+              // EMAIL
               _buildFieldLabel('Email', isRequired: true),
               TextFormField(
                 controller: _emailController,
@@ -230,7 +235,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 4. Address
+              // ADDRESS
               _buildFieldLabel('Address', isRequired: true),
               TextFormField(
                 controller: _addressController,
@@ -245,7 +250,7 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 5. Special Notes (Optional)
+              // SPECIAL NOTES (Optional)
               _buildFieldLabel('Special Notes'),
               TextFormField(
                 controller: _notesController,
@@ -260,6 +265,8 @@ class _OrderInquiryScreenState extends State<OrderInquiryScreen> {
           ),
         ),
       ),
+
+      // BOTTOM BUTTON
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppTheme.white,
