@@ -73,8 +73,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         leadingWidth: 60,
         title: const Text('Menu Details', style: AppTheme.heading),
         actions: [
-          // HEART AND CART BUTTONS
-          // Heart reads from the shared favorites Set, updates it, and triggers Home to rebuild.
+          // HEART BUTTON
           GestureDetector(
             onTap: () {
               setState(() {
@@ -101,18 +100,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
           const SizedBox(width: 10),
+
+          // CART BUTTON WITH LIVE BADGE
           GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(cart: widget.cart)));
             },
-            child: Container(
-              padding: const EdgeInsets.all(9),
-              decoration: BoxDecoration(
-                color: AppTheme.white,
-                shape: BoxShape.circle,
-                boxShadow: AppTheme.softShadow,
-              ),
-              child: const Icon(Icons.shopping_bag_outlined, size: 20, color: AppTheme.darkText),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(9),
+                  decoration: BoxDecoration(
+                    color: AppTheme.white,
+                    shape: BoxShape.circle,
+                    boxShadow: AppTheme.softShadow,
+                  ),
+                  child: const Icon(Icons.shopping_bag_outlined, size: 20, color: AppTheme.darkText),
+                ),
+                if (widget.cart.totalItems > 0)
+                  Positioned(
+                    right: -4,
+                    top: -4,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(color: AppTheme.badgeCoral, shape: BoxShape.circle),
+                      child: Text(
+                        '${widget.cart.totalItems}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 10, color: AppTheme.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
           const SizedBox(width: 20),
@@ -175,7 +197,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             const SizedBox(height: 25),
 
             // SIZE SELECTION
-            // Drinks show three sizes with adjusted prices. Food shows one "Regular" box.
             const Text('Select Size', style: AppTheme.heading2),
             const SizedBox(height: 12),
             if (widget.product.sizes.isNotEmpty)
@@ -302,7 +323,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   price: _currentPrice,
                   quantity: _quantity,
                 ));
-                // Shows feedback without leaving the page.
+                
+                // LIVE UPDATE FOR THE BADGE
+                setState(() {}); 
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Added to Cart')),
                 );
